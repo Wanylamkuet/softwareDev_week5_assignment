@@ -1,0 +1,93 @@
+#Question 1;
+User Manual: How to Create and Activate a Python Virtual Environment
+Overview
+When working on Python projects, it is a best practice to isolate your project dependencies so that different projects do not interfere with each other. This guide walks you through creating a Python virtual environment, activating it, and installing a package on macOS or Windows.
+
+Prerequisites
+Before you begin, ensure you have the following ready on your computer:
+
+Python 3 installed: Verified by running python3 --version (or python --version on Windows) in your terminal.
+
+A terminal application: Terminal (macOS) or Command Prompt / PowerShell (Windows).
+
+An active internet connection: Required to download packages from PyPI (Python Package Index).
+
+Step-by-Step Procedure
+Open your terminal application.
+
+Expected Result: A command-line prompt appears, waiting for your input.
+
+Navigate to your project directory using the cd command.
+
+Action: Type cd path/to/your/project and press Enter.
+
+Expected Result: Your terminal's current working directory changes to your target project folder.
+
+Create the virtual environment.
+
+Action: Type python3 -m venv venv and press Enter.
+
+Expected Result: A new folder named venv is created inside your project directory containing a copy of the Python interpreter and standard library.
+
+Activate the virtual environment.
+
+Action (macOS / Linux): Type source venv/bin/activate and press Enter.
+
+Action (Windows - Command Prompt): Type venv\Scripts\activate.bat and press Enter.
+
+Expected Result: The terminal prompt changes to display (venv) at the very beginning of the line, indicating the virtual environment is active.
+
+Verify the active environment.
+
+Action: Type which python (macOS/Linux) or where python (Windows) and press Enter.
+
+Expected Result: The output path points directly to your project's venv folder rather than your system-wide Python installation.
+
+Install a package using pip.
+
+Action: Type pip install requests and press Enter.
+
+Expected Result: pip downloads and installs the package, ending with a success message confirming the installation.
+
+Screenshot Description
+Screenshot: Terminal Window Showing Successful Activation and Package Installation
+
+What it shows: A dark-themed terminal window. On line 1, the user types source venv/bin/activate. On line 2, the prompt updates to show (venv) in parentheses on the left edge ((venv) user@MacBook-Pro project %). On the next line, the user runs pip install requests, followed by progress bars indicating successful downloading and installation of the package.
+
+Troubleshooting Note
+Common Error: zsh: command not found: venv or running pip install installs the package globally instead of inside the environment.
+
+Cause: The virtual environment was either never created or was not successfully activated before running the installation command.
+
+Solution: Make sure you ran python3 -m venv venv successfully first, and double-check that your terminal prompt displays the (venv) indicator before running any pip install commands. If it does not show, run the activation command (source venv/bin/activate) again.
+
+
+
+
+
+
+#Question 2;
+API Reference: Create TaskEndpoint OverviewHTTP Method: POSTEndpoint Path: /api/v1/tasksDescription: Creates a new task within the project management system. The authenticated user making the request is automatically recorded as the creator of the task, and the task can be assigned to a specific team member, scheduled with a due date, and assigned a priority level.Request HeadersHeader NameTypeRequiredDescriptionAuthorizationStringYesBearer token for authentication. Format: Bearer <access_token>Content-TypeStringYesMust be set to application/json.AcceptStringYesMust be set to application/json.Request Parameters (Body)The request body must be a valid JSON object containing the task details:ParameterData TypeRequired / OptionalDescriptiontitleStringRequiredThe headline or title of the task (1–150 characters).descriptionStringOptionalDetailed information or acceptance criteria for the task.assignee_idString (UUID)OptionalThe unique system identifier (user ID) of the team member assigned to the task.due_dateString (ISO 8601)OptionalThe target deadline for completion in YYYY-MM-DD or full datetime format.priorityStringOptionalThe priority level of the task. Allowed values: low, medium, high. (Defaults to medium if omitted).Example Request Body (application/json)JSON{
+  "title": "Implement User Authentication Flow",
+  "description": "Set up JWT-based authentication endpoints for login and registration.",
+  "assignee_id": "usr_94827103a",
+  "due_date": "2026-12-15",
+  "priority": "high"
+}
+HTTP Response CodesStatus CodePlain-Language Explanation201 CreatedThe task was successfully created and saved in the database. Returns the newly created task resource.400 Bad RequestThe request body is malformed, JSON parsing failed, or validation failed (e.g., missing required title, or an invalid priority value).401 UnauthorizedThe Authorization header is missing, expired, or invalid.403 ForbiddenThe authenticated user does not have sufficient permissions to create tasks within this project.404 Not FoundThe specified assignee_id does not exist in the system.500 Internal Server ErrorAn unexpected error occurred on the server side (e.g., database connection failure).Example Successful Response (201 Created)JSON{
+  "status": "success",
+  "code": 201,
+  "message": "Task created successfully.",
+  "data": {
+    "id": "tsk_550e8400-e29b-41d4-a716-446655440000",
+    "title": "Implement User Authentication Flow",
+    "description": "Set up JWT-based authentication endpoints for login and registration.",
+    "status": "todo",
+    "priority": "high",
+    "assignee_id": "usr_94827103a",
+    "creator_id": "usr_10293847b",
+    "due_date": "2026-12-15T23:59:59Z",
+    "created_at": "2026-11-17T12:30:00Z",
+    "updated_at": "2026-11-17T12:30:00Z"
+  }
+}
